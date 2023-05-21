@@ -200,9 +200,9 @@ def testWin(p1, p2, dat, playdat, oppdat, rm1, rm2):
     dftest["AdjLRank"] = testL
     dft2 = pd.DataFrame(columns=["AdjWRank", "AdjLRank"])
     dft2.loc[0] = [testL, testW]
-    knn = neighbors.KNeighborsRegressor(rm1.index(min(rm1)) + 1, weights="uniform")
+    knn = neighbors.KNeighborsRegressor(rm1.index(min(rm1)) + 2, weights="uniform")
     a = knn.fit(playdat[["AdjWRank", "AdjLRank"]], playdat["PlayW"]).predict(dftest[["AdjWRank", "AdjLRank"]])
-    knn2 = neighbors.KNeighborsRegressor(rm2.index(min(rm2)) + 1, weights="uniform")
+    knn2 = neighbors.KNeighborsRegressor(rm2.index(min(rm2)) + 2, weights="uniform")
     b2 = knn2.fit(oppdat[["AdjWRank", "AdjLRank"]], oppdat["OppW"]).predict(dft2[["AdjWRank", "AdjLRank"]])
     return a, b2
 
@@ -211,7 +211,7 @@ def getAccuracy(xval, yval, rms, size):
     X_train, X_test, y_train, y_test = train_test_split(xval, yval, random_state=1, test_size=size)
     nb = GaussianNB()
     treeclf = DecisionTreeClassifier(max_depth=5, random_state=1)
-    knn_classifier = KNeighborsClassifier(n_neighbors=rms.index(min(rms)) + 1, metric='euclidean')
+    knn_classifier = KNeighborsClassifier(n_neighbors=rms.index(min(rms)) + 2, metric='euclidean')
     return nb.fit(X_train, y_train).score(X_test, y_test), treeclf.fit(X_train, y_train).score(X_test,
                                                                                                y_test), knn_classifier.fit(
         X_train, y_train).score(X_test, y_test)
@@ -344,14 +344,14 @@ else:
     st.write("NB: %.4f" % n4 + ",  Tree: %.4f" % t4 + ",  kNN: %.4f" % k4 + str1)
 
     st.write("**Prediction Plots for Player's Wins** (based on adj. ranking of all players battled)")
-    plotPredict(dfplay["AdjWRank"], dfplay["PlayW"], rmse1.index(min(rmse1)) + 1, min(len(rmse1), 100))
-    plotPredict(dfplay["AdjLRank"], dfplay["PlayW"], rmse1.index(min(rmse1)) + 1, min(len(rmse1), 100))
+    plotPredict(dfplay["AdjWRank"], dfplay["PlayW"], rmse1.index(min(rmse1)) + 2, min(len(rmse1), 100))
+    plotPredict(dfplay["AdjLRank"], dfplay["PlayW"], rmse1.index(min(rmse1)) + 2, min(len(rmse1), 100))
 
     st.write("**Prediction Plots for Opponent's Wins** (based on adj. ranking of all players battled)")
-    plotPredict(dfopp["AdjWRank"], dfopp["OppW"], rmse2.index(min(rmse2)) + 1, min(len(rmse2), 100))
-    plotPredict(dfopp["AdjLRank"], dfopp["OppW"], rmse2.index(min(rmse2)) + 1, min(len(rmse2), 100))
+    plotPredict(dfopp["AdjWRank"], dfopp["OppW"], rmse2.index(min(rmse2)) + 2, min(len(rmse2), 100))
+    plotPredict(dfopp["AdjLRank"], dfopp["OppW"], rmse2.index(min(rmse2)) + 2, min(len(rmse2), 100))
 
     if len(rmse3) > 0:
         st.write("**Prediction Plots for VS Matches** (based on adj. ranking of all players battled)")
-        plotPredict(dfboth["AdjWRank"], dfboth["PlayW"], rmse3.index(min(rmse3)) + 1, len(rmse3))
-        plotPredict(dfboth["AdjWRank"], dfboth["OppW"], rmse3.index(min(rmse3)) + 1, len(rmse3))
+        plotPredict(dfboth["AdjWRank"], dfboth["PlayW"], rmse3.index(min(rmse3)) + 2, len(rmse3))
+        plotPredict(dfboth["AdjWRank"], dfboth["OppW"], rmse3.index(min(rmse3)) + 2, len(rmse3))
